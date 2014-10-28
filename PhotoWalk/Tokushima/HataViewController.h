@@ -11,12 +11,5 @@
 @class CustomAnnotation_Hata;
 
 @interface HataViewController : UITableViewController < UITableViewDelegate >
-{
-	
-@private
-	
-	CustomAnnotation_Hata *ca;
-	
-}
 
 @end

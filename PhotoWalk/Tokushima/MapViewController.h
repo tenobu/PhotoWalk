@@ -10,6 +10,7 @@
 
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "HataView.h"
 
 @interface MapViewController : UIViewController < MKMapViewDelegate, CLLocationManagerDelegate >
 {
@@ -27,6 +28,7 @@
 }
 
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+//@property (weak, nonatomic) IBOutlet HataView *hataView;
 
 @property (weak, nonatomic) IBOutlet UIButton *button_TokusimaJyou;
 @property (weak, nonatomic) IBOutlet UIButton *button_Ima;

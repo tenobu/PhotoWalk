@@ -10,6 +10,36 @@
 
 @implementation HataView
 
+//+ (HataView *)loadInstanceOfViewFromNib
+//{
+//
+//	return [[[NSBundle mainBundle] loadNibNamed: @"HataView"
+//										  owner: nil
+//										options: nil] lastObject];
+//
+//}
+//
+//- (id)awakeAfterUsingCoder: (NSCoder *)aDecoder
+//{
+//
+//	BOOL loadedFromSimpleVuew = ( [[self subviews] count] == 0 );
+//	
+//	if (loadedFromSimpleVuew) {
+//
+//		HataView *hataView = [HataView loadInstanceOfViewFromNib];
+//		
+//		hataView.frame                  = self.frame;
+//		hataView.autoresizingMask       = self.autoresizingMask;
+//		hataView.alpha                  = self.alpha;
+//		hataView.userInteractionEnabled = self.userInteractionEnabled;
+//
+//		return hataView;
+//	}
+//	
+//	return self;
+//
+//}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

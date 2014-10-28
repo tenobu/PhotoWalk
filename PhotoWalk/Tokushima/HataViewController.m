@@ -11,6 +11,15 @@
 #import "CustomAnnotation_Hata.h"
 
 @interface HataViewController ()
+{
+	
+@private
+	
+	CustomAnnotation_Hata *hata;
+	
+	NSMutableData *receivedData;
+	
+}
 
 @end
 
@@ -29,17 +38,114 @@
 
 	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
 	
-	NSString *no = [ud objectForKey: @"Hata Data No"];
-	
-	self.navigationItem.title = no;
+	NSString *string_no = [ud objectForKey: @"Hata Data No"];
 	
 	self.tableView.delegate = self;
+	
+	self.navigationItem.title = string_no;
+	
+	[self callHataData: string_no];
 	
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)callHataData: (NSString *)str_no
+{
+	
+	NSString *command = [NSString stringWithFormat:
+						 @"http://smartshinobu.miraiserver.com/tokushima/oneplacetitle.php?id=%@", str_no];
+	NSURL *url = [NSURL URLWithString: command];
+	
+	NSURLRequest       *request = [[NSURLRequest alloc] initWithURL: url];
+	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest: request
+																  delegate: self];
+	
+	// 作成に失敗する場合には、リクエストが送信されないので
+	// チェックする
+	if ( ! connection ) {
+		
+		NSLog(@"connection error.");
+		
+	}
+	
+}
+
+// データ受信時に１回だけ呼び出される。
+// 受信データを格納する変数を初期化する。
+- (void) connection: (NSURLConnection *)connection
+ didReceiveResponse: (NSURLResponse *)response
+{
+	
+	// receiveDataはフィールド変数
+	receivedData = [[NSMutableData alloc] init];
+	
+}
+
+// データ受信したら何度も呼び出されるメソッド。
+// 受信したデータをreceivedDataに追加する
+- (void) connection: (NSURLConnection *)connection
+	 didReceiveData: (NSData *)data
+{
+	
+	[receivedData appendData: data];
+	
+}
+
+// データ受信が終わったら呼び出されるメソッド。
+- (void) connectionDidFinishLoading: (NSURLConnection *)connection
+{
+	
+	// 今回受信したデータはHTMLデータなので、NSDataをNSStringに変換する。
+	NSString *str = [[NSString alloc] initWithBytes: receivedData.bytes
+											 length: receivedData.length
+										   encoding: NSUTF8StringEncoding];
+	
+	str = [str stringByReplacingOccurrencesOfString: @"<!--/* Miraiserver \"NO ADD\" http://www.miraiserver.com */-->"
+										 withString: @""];
+	str = [str stringByReplacingOccurrencesOfString: @"<script type=\"text/javascript\" src=\"http://17787372.ranking.fc2.com/analyze.js\" charset=\"utf-8\"></script>"
+										 withString: @""];
+	
+	NSData *trimdata = [str dataUsingEncoding:NSUTF8StringEncoding];
+	
+	NSError *error;
+	NSArray *array = [NSJSONSerialization JSONObjectWithData: trimdata
+													 options: NSJSONReadingMutableContainers
+													   error: &error];
+	
+	if ( error ) {
+		
+		NSLog( @"%@", error );
+		
+		return;
+		
+	}
+	
+	NSDictionary *dic = [array objectAtIndex: 0];
+
+	NSString *no       = [dic objectForKey: @"no"];
+	NSString *title    = [dic objectForKey: @"title"];
+	NSString *subtitle = [dic objectForKey: @"subtitle"];
+	NSString *lat      = [dic objectForKey: @"lat"];
+	NSString *lng      = [dic objectForKey: @"lng"];
+
+	self.navigationController.title = [NSString stringWithFormat: @"%@、%@", no, title];
+	
+}
+
+- (void)connection: (NSURLConnection *)connection
+  didFailWithError: (NSError *)error
+{
+	
+	// エラー情報を表示する。
+	// objectForKeyで指定するKeyがポイント
+	NSLog(@"Connection failed! Error - %@ %@",
+		  [error localizedDescription],
+		  [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
+	
 }
 
 #pragma mark - Table view data source
