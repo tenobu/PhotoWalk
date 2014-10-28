@@ -19,7 +19,7 @@
 	annotationView.enabled = YES;
 	annotationView.canShowCallout = NO;
 	annotationView.image = [UIImage imageNamed: @"HataOk.png"];
-	annotationView.frame = CGRectMake( 0, 0, 20, 30 );
+	annotationView.frame = CGRectMake( 0, 0, 35, 35 );
 	annotationView.rightCalloutAccessoryView = [UIButton buttonWithType: UIButtonTypeDetailDisclosure];
 	
 	return annotationView;

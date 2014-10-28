@@ -10,6 +10,7 @@
 
 #import "AppDelegate.h"
 #import "CustomAnnotation_Hata.h"
+#import "CustomAnnotation_HataOk.h"
 #import "CustomAnnotation_Photo.h"
 #import "CustomAnnotation_GPS.h"
 #import "CustomAnnotation_GPS_Old.h"
@@ -258,10 +259,28 @@ didDeselectAnnotationView: (MKAnnotationView *)view
 {
 	
 	if ( [annotation isKindOfClass: [CustomAnnotation_Hata class]] ) {
-	
+		
 		CustomAnnotation_Hata *ca1 = (CustomAnnotation_Hata *)annotation;
 		
 		MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier: @"CustomAnnotation_Hata"];
+		
+		if ( annotationView == nil ) {
+			
+			annotationView = ca1.annotationView;
+			
+		} else {
+			
+			annotationView.annotation = annotation;
+			
+		}
+		
+		return annotationView;
+		
+	} else if ( [annotation isKindOfClass: [CustomAnnotation_HataOk class]] ) {
+		
+		CustomAnnotation_HataOk *ca1 = (CustomAnnotation_HataOk *)annotation;
+		
+		MKAnnotationView *annotationView = [mapView dequeueReusableAnnotationViewWithIdentifier: @"CustomAnnotation_HataOk"];
 		
 		if ( annotationView == nil ) {
 			
