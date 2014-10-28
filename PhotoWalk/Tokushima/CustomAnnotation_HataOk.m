@@ -16,7 +16,7 @@
 	MKAnnotationView *annotationView = [[MKAnnotationView alloc] initWithAnnotation: self
 																	reuseIdentifier: @"CustomAnnotation_HataOk"];
 	
-	annotationView.enabled = YES;
+	annotationView.enabled = NO;
 	annotationView.canShowCallout = NO;
 	annotationView.image = [UIImage imageNamed: @"HataOk.png"];
 	annotationView.frame = CGRectMake( 0, 0, 35, 35 );

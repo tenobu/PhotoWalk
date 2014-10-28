@@ -115,9 +115,9 @@
 				98F93F6019FF6A4700D2A30A /* Main.storyboard */,
 				98F93F5A19FF6A4700D2A30A /* AppDelegate.h */,
 				98F93F5B19FF6A4700D2A30A /* AppDelegate.m */,
+				98F93F8219FF6AFA00D2A30A /* Tokushima */,
 				98F93F7C19FF6AFA00D2A30A /* Camera */,
 				98F93F7F19FF6AFA00D2A30A /* Slideshow */,
-				98F93F8219FF6AFA00D2A30A /* Tokushima */,
 				98F93F6319FF6A4700D2A30A /* Images.xcassets */,
 				98F93F5619FF6A4700D2A30A /* Supporting Files */,
 			);
@@ -171,24 +171,24 @@
 		98F93F8219FF6AFA00D2A30A /* Tokushima */ = {
 			isa = PBXGroup;
 			children = (
+				98F93F9319FF6AFA00D2A30A /* MapViewController.h */,
+				98F93F9419FF6AFA00D2A30A /* MapViewController.m */,
 				98F93F8319FF6AFA00D2A30A /* CustomAnnotation.h */,
 				98F93F8419FF6AFA00D2A30A /* CustomAnnotation.m */,
-				98F93F8519FF6AFA00D2A30A /* CustomAnnotation_GPS.h */,
-				98F93F8619FF6AFA00D2A30A /* CustomAnnotation_GPS.m */,
-				98F93F8719FF6AFA00D2A30A /* CustomAnnotation_GPS_Old.h */,
-				98F93F8819FF6AFA00D2A30A /* CustomAnnotation_GPS_Old.m */,
 				98F93F8919FF6AFA00D2A30A /* CustomAnnotation_Hata.h */,
 				98F93F8A19FF6AFA00D2A30A /* CustomAnnotation_Hata.m */,
 				98F93F8B19FF6AFA00D2A30A /* CustomAnnotation_HataOk.h */,
 				98F93F8C19FF6AFA00D2A30A /* CustomAnnotation_HataOk.m */,
 				98F93F8D19FF6AFA00D2A30A /* CustomAnnotation_Photo.h */,
 				98F93F8E19FF6AFA00D2A30A /* CustomAnnotation_Photo.m */,
+				98F93F8519FF6AFA00D2A30A /* CustomAnnotation_GPS.h */,
+				98F93F8619FF6AFA00D2A30A /* CustomAnnotation_GPS.m */,
+				98F93F8719FF6AFA00D2A30A /* CustomAnnotation_GPS_Old.h */,
+				98F93F8819FF6AFA00D2A30A /* CustomAnnotation_GPS_Old.m */,
 				98F93F8F19FF6AFA00D2A30A /* HataView.h */,
 				98F93F9019FF6AFA00D2A30A /* HataView.m */,
 				98F93F9119FF6AFA00D2A30A /* HataViewController.h */,
 				98F93F9219FF6AFA00D2A30A /* HataViewController.m */,
-				98F93F9319FF6AFA00D2A30A /* MapViewController.h */,
-				98F93F9419FF6AFA00D2A30A /* MapViewController.m */,
 			);
 			path = Tokushima;
 			sourceTree = "<group>";

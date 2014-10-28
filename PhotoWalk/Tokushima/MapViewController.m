@@ -227,8 +227,9 @@ calloutAccessoryControlTapped: (UIControl *)control
 //		[self performSegueWithIdentifier: @"segue hata"
 //								  sender: self];
 
+		HataView *hataView = [[HataView alloc] initWithFrame: self.view.frame];
 		
-		//HataView *hataView = [[HataView alloc] initWithFrame: frame];
+		[self.view addSubview: hataView];
 		
 	} else if ( [[ca class] isSubclassOfClass: [CustomAnnotation_Photo class]] ) {
 		

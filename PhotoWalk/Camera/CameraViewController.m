@@ -12,6 +12,7 @@
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "CustomAnnotation_Hata.h"
+#import "CustomAnnotation_HataOk.h"
 #import "CustomAnnotation_Photo.h"
 #import "CustomAnnotation_GPS.h"
 #import "CustomAnnotation_GPS_Old.h"
@@ -199,8 +200,47 @@ didFinishPickingMediaWithInfo: (NSDictionary *)info
 					  
 					  }];
 
+	//image をデータベースに登録
+	
+	
+	
+	
 	CLLocationDegrees lat = latitude;
 	CLLocationDegrees lon = longitude;
+	
+	
+	for ( CustomAnnotation_Hata *hata in app.array_Hata ) {
+		
+		CustomAnnotation_HataOk *ok = [self hataOk: hata.no];
+		
+		if ( ok == nil ) {
+			
+			float float_lat_1 = hata.coordinate.latitude  - 0.0002;
+			float float_lat_2 = hata.coordinate.latitude  + 0.0002;
+			float float_lon_1 = hata.coordinate.longitude - 0.0002;
+			float float_lon_2 = hata.coordinate.longitude + 0.0002;
+			
+			if ( float_lat_1 < lat && lat < float_lat_2 &&
+				 float_lon_1 < lon && lon < float_lon_2 ) {
+			
+				ok = [[CustomAnnotation_HataOk alloc] init];
+				
+				ok.coordinate  = hata.coordinate;
+				ok.no          = hata.no;
+				ok.title       = hata.title;
+				ok.subtitle    = hata.subtitle;
+				ok.explanation = hata.explanation;
+				
+				[app.array_HataOk addObject: ok];
+				
+				break;
+				
+			}
+			
+		}
+		
+	}
+
 	
 	if ( latitude_P_Old == 9999 && longitude_P_Old == 9999 ) {
 		
@@ -228,7 +268,7 @@ didFinishPickingMediaWithInfo: (NSDictionary *)info
 		}
 		
 	}
-
+	
 }
 
 - (void)     locationManager: (CLLocationManager *)manager
@@ -360,6 +400,23 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 {
 	
 	return [app.array_GPSOld_Add lastObject];
+	
+}
+
+- (CustomAnnotation_HataOk *)hataOk: (NSString *)no
+{
+
+	for ( CustomAnnotation_HataOk *ok in app.array_HataOk) {
+
+		if ( [ok.no isEqualToString: no] ) {
+			
+			return ok;
+			
+		}
+		
+	}
+	
+	return nil;
 	
 }
 

@@ -27,7 +27,7 @@
 
 - (void)setNo: (NSString *)no
 {
-
+	
 	_no = no;
 	
 }
@@ -38,4 +38,19 @@
 	return _no;
 	
 }
+//
+//- (void)setFlag: (NSString *)flag
+//{
+//
+//	_flag = flag;
+//	
+//}
+//
+//- (NSString *)flag
+//{
+//	
+//	return flag;
+//	
+//}
+
 @end

@@ -33,6 +33,7 @@
 	// Override point for customization after application launch.
 
 	[self loadAnnotation_Hara];
+	[self loadAnnotation_HaraOk];
 	[self loadAnnotation_Photo];
 	[self initAnnotation_GPS];
 	[self initAnnotation_GPSOld];
@@ -67,7 +68,20 @@
 {
 	
 	self.array_Hata   = [[NSMutableArray alloc] init];
+	
+	[self callHataData];
+	
+}
+
+- (void)loadAnnotation_HaraOk
+{
+	
 	self.array_HataOk = [[NSMutableArray alloc] init];
+
+}
+
+- (void)callHataData
+{
 	
 	NSURL *url = [NSURL URLWithString:@"http://smartshinobu.miraiserver.com/tokushima/placetitle.php"];
 	
@@ -192,7 +206,11 @@
 	[array_sort sortUsingDescriptors: sortDescArray];
 	
 
-	NSMutableArray *array_hata = [[NSMutableArray alloc] init];
+	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
+	
+	
+	NSMutableArray *array_hata   = [[NSMutableArray alloc] init];
+	NSMutableArray *array_hataok = [[NSMutableArray alloc] init];
 	
 	for ( NSDictionary *dic in array_sort ) {
 		
@@ -212,23 +230,28 @@
 		
 		[array_hata addObject: ca];
 
-		if ( [ca.no isEqualToString: @"1"] ) {
+		
+		NSString *no_flag = [NSString stringWithFormat: @"Hata_%@", ca.no];
+		NSNumber *num_flag = [ud objectForKey: no_flag];
+		
+		if ( num_flag ) {
 			
-			CustomAnnotation_HataOk *ca = [[CustomAnnotation_HataOk alloc] init];
+			CustomAnnotation_HataOk *co = [[CustomAnnotation_HataOk alloc] init];
 			
-			ca.coordinate  = CLLocationCoordinate2DMake( float_lat, float_lng );
-			ca.no          = [dic objectForKey: @"no"];
-			ca.title       = [dic objectForKey: @"title"];
-			ca.subtitle    = [dic objectForKey: @"subtitle"];
-			ca.explanation = [NSString stringWithFormat: @"%@, %@", str_lat, str_lng];
+			co.coordinate  = CLLocationCoordinate2DMake( float_lat, float_lng );
+			co.no          = [dic objectForKey: @"no"];
+			co.title       = [dic objectForKey: @"title"];
+			co.subtitle    = [dic objectForKey: @"subtitle"];
+			co.explanation = [NSString stringWithFormat: @"%@, %@", str_lat, str_lng];
 			
-			[self.array_HataOk addObject: ca];
+			[self.array_HataOk addObject: co];
 
 		}
-		
+
 	}
 	
-	[self.array_Hata addObjectsFromArray: array_hata];
+	[self.array_Hata   addObjectsFromArray: array_hata];
+	[self.array_HataOk addObjectsFromArray: array_hataok];
 	
 }
 
@@ -242,6 +265,8 @@
 		  [error localizedDescription],
 		  [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
 
+	[self callHataData];
+	
 }
 
 @end

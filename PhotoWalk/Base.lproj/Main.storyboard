@@ -297,7 +297,7 @@
                             <outlet property="delegate" destination="XtE-2b-i3I" id="JLs-z4-cgS"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Setting" image="Setting_40x40.png" id="nI5-Qf-jFu"/>
+                    <tabBarItem key="tabBarItem" title="Setting" image="Setting" id="nI5-Qf-jFu"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uI7-wc-ulW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -306,7 +306,7 @@
     </scenes>
     <resources>
         <image name="Camera" width="40" height="40"/>
-        <image name="Setting_40x40.png" width="40" height="39"/>
+        <image name="Setting" width="40" height="39"/>
         <image name="Slideshow" width="40" height="40"/>
         <image name="Tokushima" width="40" height="40"/>
     </resources>
