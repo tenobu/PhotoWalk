@@ -58,7 +58,7 @@
     //urlstrの末尾に変数dvidを追加
 	urlstr = [urlstr stringByAppendingString:dvid];
 	//ここ
-	
+	//Mac book Pro のシュミレーターだとエラーが起きるので確認して下さい。
 	
 	
 	
