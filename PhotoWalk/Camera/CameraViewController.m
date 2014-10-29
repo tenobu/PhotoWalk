@@ -51,6 +51,24 @@
 
 	[self cameraButtonPressed: nil];
 	
+	for ( CustomAnnotation_Hata *hata in app.array_Hata ) {
+
+		if ( [hata.no isEqualToString: @"1"] ) {
+			
+			CustomAnnotation_HataOk *ok = [[CustomAnnotation_HataOk alloc] init];
+					
+			ok.coordinate  = hata.coordinate;
+			ok.no          = hata.no;
+			ok.title       = hata.title;
+			ok.subtitle    = hata.subtitle;
+			ok.explanation = hata.explanation;
+			
+			[app.array_HataOk addObject: ok];
+			
+		}
+		
+	}
+
 }
 
 - (void)didReceiveMemoryWarning
