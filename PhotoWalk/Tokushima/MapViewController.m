@@ -56,8 +56,18 @@
 	region.span   = span;
 	region.center = location;
 	
+	
+	CustomAnnotation_GPS *ca = [[CustomAnnotation_GPS alloc] init];
+	
+	ca.coordinate  = location;
+	ca.title       = @"自分の現在位置";
+	ca.subtitle    = [NSString stringWithFormat: @"%f, %f", latitude, longitude];
+	ca.explanation = @"";
+	
+	[app.array_GPS addObject: ca];
+
+	
 	[self addAnnotation_Hata];
-	[self addAnnotation_Photo];
 
 	[self.mapView setRegion: region
 				   animated: YES];
@@ -75,7 +85,7 @@
 	
 //	[self addAnnotation_Photo_Add];
 	[self addAnnotation_Photo];
-	[self addAnnotation_GPS];
+	[self setAnnotation_GPS];
 	[self addAnnotation_GPSOld];
 	
 }
@@ -143,6 +153,7 @@
 	
 }
 
+// 地図関連
 - (void)mapViewWillStartLoadingMap: (MKMapView *)mapView
 {
 	
@@ -385,7 +396,7 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 		latitude  = latitude_Old  = lat;
 		longitude = longitude_Old = lon;
 		
-		[self addAnnotation_GPS];
+		[self setAnnotation_GPS];
 		
 	} else {
 		
@@ -398,9 +409,9 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 		// 0.00007, 0.0001
 		if ( _lat > 0.00007 || _lon > 0.00007 ) {
 			
-			CustomAnnotation_GPS *gps = [self lastAnnotation_GPS];
+			CustomAnnotation_GPS *gps = [self annotation_GPS];
 			
-			if ( bool_GPS_Old ) {
+			if ( app.bool_GPS_Old ) {
 				
 				[self addAnnotation_GPSOld];
 				
@@ -506,29 +517,31 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 //	
 //}
 
-- (void)addAnnotation_GPS
+- (void)removeAnnotation_GPS
 {
 	
 	[self.mapView removeAnnotations: app.array_GPS];
 	
-	CustomAnnotation_GPS *ca = [[CustomAnnotation_GPS alloc] init];
-	
+}
+
+- (void)setAnnotation_GPS
+{
+
+	CustomAnnotation_GPS *ca = app.array_GPS[0];
 
 	ca.coordinate  = CLLocationCoordinate2DMake( latitude, longitude );// 34.074, 134.554 );	ca.no          = 1;
 	ca.title       = @"自分の現在位置";
 	ca.subtitle    = [NSString stringWithFormat: @"%f, %f", latitude, longitude];
 	ca.explanation = @"";
 	
-	[app.array_GPS addObject: ca];
-	
 	[self.mapView addAnnotations: app.array_GPS];
 	
 }
 
-- (CustomAnnotation_GPS *)lastAnnotation_GPS
+- (CustomAnnotation_GPS *)annotation_GPS
 {
 	
-	return [app.array_GPS lastObject];
+	return app.array_GPS[0];
 	
 }
 
