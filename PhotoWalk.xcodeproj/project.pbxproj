@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		985BC3FB1A00798E00151245 /* CellViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 985BC3FA1A00798E00151245 /* CellViewCell.m */; };
+		985BC4011A00817800151245 /* PhotoViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 985BC4001A00817800151245 /* PhotoViewCell.m */; };
+		9866E2A71A00C473002B529E /* TextViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9866E2A61A00C473002B529E /* TextViewCell.m */; };
 		98F93F5919FF6A4700D2A30A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 98F93F5819FF6A4700D2A30A /* main.m */; };
 		98F93F5C19FF6A4700D2A30A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 98F93F5B19FF6A4700D2A30A /* AppDelegate.m */; };
 		98F93F6219FF6A4700D2A30A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 98F93F6019FF6A4700D2A30A /* Main.storyboard */; };
@@ -51,6 +54,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		985BC3F91A00798E00151245 /* CellViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CellViewCell.h; sourceTree = "<group>"; };
+		985BC3FA1A00798E00151245 /* CellViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CellViewCell.m; sourceTree = "<group>"; };
+		985BC3FF1A00817800151245 /* PhotoViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoViewCell.h; sourceTree = "<group>"; };
+		985BC4001A00817800151245 /* PhotoViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoViewCell.m; sourceTree = "<group>"; };
+		9866E2A51A00C473002B529E /* TextViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextViewCell.h; sourceTree = "<group>"; };
+		9866E2A61A00C473002B529E /* TextViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextViewCell.m; sourceTree = "<group>"; };
 		98F93F5319FF6A4700D2A30A /* PhotoWalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoWalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98F93F5719FF6A4700D2A30A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		98F93F5819FF6A4700D2A30A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -219,6 +228,12 @@
 				98F93F9019FF6AFA00D2A30A /* HataView.m */,
 				98F93F9119FF6AFA00D2A30A /* HataViewController.h */,
 				98F93F9219FF6AFA00D2A30A /* HataViewController.m */,
+				985BC3F91A00798E00151245 /* CellViewCell.h */,
+				985BC3FA1A00798E00151245 /* CellViewCell.m */,
+				9866E2A51A00C473002B529E /* TextViewCell.h */,
+				9866E2A61A00C473002B529E /* TextViewCell.m */,
+				985BC3FF1A00817800151245 /* PhotoViewCell.h */,
+				985BC4001A00817800151245 /* PhotoViewCell.m */,
 			);
 			path = Tokushima;
 			sourceTree = "<group>";
@@ -358,8 +373,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9866E2A71A00C473002B529E /* TextViewCell.m in Sources */,
 				98F93F9E19FF6AFA00D2A30A /* HataViewController.m in Sources */,
 				98F93F9619FF6AFA00D2A30A /* SlideshowViewController.m in Sources */,
+				985BC3FB1A00798E00151245 /* CellViewCell.m in Sources */,
 				98F93F9919FF6AFA00D2A30A /* CustomAnnotation_GPS_Old.m in Sources */,
 				98F93F9B19FF6AFA00D2A30A /* CustomAnnotation_HataOk.m in Sources */,
 				98F93F9519FF6AFA00D2A30A /* CameraViewController.m in Sources */,
@@ -371,6 +388,7 @@
 				98F93F5919FF6A4700D2A30A /* main.m in Sources */,
 				98F93F9A19FF6AFA00D2A30A /* CustomAnnotation_Hata.m in Sources */,
 				98F93F9F19FF6AFA00D2A30A /* MapViewController.m in Sources */,
+				985BC4011A00817800151245 /* PhotoViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -571,6 +589,7 @@
 				98F93F7819FF6A4700D2A30A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		98F93F7919FF6A4700D2A30A /* Build configuration list for PBXNativeTarget "PhotoWalkTests" */ = {
 			isa = XCConfigurationList;
@@ -579,6 +598,7 @@
 				98F93F7B19FF6A4700D2A30A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

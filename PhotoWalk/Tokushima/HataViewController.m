@@ -9,6 +9,9 @@
 #import "HataViewController.h"
 
 #import "CustomAnnotation_Hata.h"
+#import "CellViewCell.h"
+#import "TextViewCell.h"
+#import "PhotoViewCell.h"
 
 @interface HataViewController ()
 {
@@ -17,7 +20,16 @@
 	
 	CustomAnnotation_Hata *hata;
 	
+	NSURLConnection *connectionFile;
+	NSURLConnection *connectionData;
+	
+	NSMutableData *receivedFile;
 	NSMutableData *receivedData;
+	
+	NSString *string_NoTitle, *string_Subtitle, *string_LatLng;
+	
+	NSMutableArray *array_Data;
+	NSMutableArray *array_Photo;
 	
 }
 
@@ -30,15 +42,17 @@
 
 	[super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
 	NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
 	
 	NSString *string_no = [ud objectForKey: @"Hata Data No"];
+	
+	
+	string_NoTitle = string_Subtitle = string_LatLng = @"";
+	
+	array_Data  = [[NSMutableArray alloc] init];
+	array_Photo = [[NSMutableArray alloc] init];
+	
 	
 	self.tableView.delegate = self;
 	
@@ -49,8 +63,10 @@
 }
 
 - (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+
+	[super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+
 }
 
 - (void)callHataData: (NSString *)str_no
@@ -60,13 +76,25 @@
 						 @"http://smartshinobu.miraiserver.com/tokushima/oneplacetitle.php?id=%@", str_no];
 	NSURL *url = [NSURL URLWithString: command];
 	
-	NSURLRequest       *request = [[NSURLRequest alloc] initWithURL: url];
-	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest: request
-																  delegate: self];
+	NSURLRequest    *request        = [[NSURLRequest alloc] initWithURL: url];
+	connectionFile = [[NSURLConnection alloc] initWithRequest: request
+													 delegate: self];
 	
-	// 作成に失敗する場合には、リクエストが送信されないので
-	// チェックする
-	if ( ! connection ) {
+	if ( ! connectionFile ) {
+		
+		NSLog(@"connection error.");
+		
+	}
+	
+	command = [NSString stringWithFormat:
+			   @"http://smartshinobu.miraiserver.com/tokushima/oneplaceimage.php?id=%@", str_no];
+	url = [NSURL URLWithString: command];
+	
+	request        = [[NSURLRequest alloc] initWithURL: url];
+	connectionData = [[NSURLConnection alloc] initWithRequest: request
+													 delegate: self];
+	
+	if ( ! connectionData ) {
 		
 		NSLog(@"connection error.");
 		
@@ -74,65 +102,221 @@
 	
 }
 
-// データ受信時に１回だけ呼び出される。
-// 受信データを格納する変数を初期化する。
-- (void) connection: (NSURLConnection *)connection
- didReceiveResponse: (NSURLResponse *)response
+- (void)callPhotoData: (NSString *)filename
 {
 	
-	// receiveDataはフィールド変数
-	receivedData = [[NSMutableData alloc] init];
+	NSMutableDictionary *dic;
+	BOOL flag = NO;
 	
-}
-
-// データ受信したら何度も呼び出されるメソッド。
-// 受信したデータをreceivedDataに追加する
-- (void) connection: (NSURLConnection *)connection
-	 didReceiveData: (NSData *)data
-{
-	
-	[receivedData appendData: data];
-	
-}
-
-// データ受信が終わったら呼び出されるメソッド。
-- (void) connectionDidFinishLoading: (NSURLConnection *)connection
-{
-	
-	// 今回受信したデータはHTMLデータなので、NSDataをNSStringに変換する。
-	NSString *str = [[NSString alloc] initWithBytes: receivedData.bytes
-											 length: receivedData.length
-										   encoding: NSUTF8StringEncoding];
-	
-	str = [str stringByReplacingOccurrencesOfString: @"<!--/* Miraiserver \"NO ADD\" http://www.miraiserver.com */-->"
-										 withString: @""];
-	str = [str stringByReplacingOccurrencesOfString: @"<script type=\"text/javascript\" src=\"http://17787372.ranking.fc2.com/analyze.js\" charset=\"utf-8\"></script>"
-										 withString: @""];
-	
-	NSData *trimdata = [str dataUsingEncoding:NSUTF8StringEncoding];
-	
-	NSError *error;
-	NSArray *array = [NSJSONSerialization JSONObjectWithData: trimdata
-													 options: NSJSONReadingMutableContainers
-													   error: &error];
-	
-	if ( error ) {
+	for ( dic in array_Photo ) {
+	 
+		if ( [[dic objectForKey: @"filename"] isEqualToString: filename] ) {
+			
+			flag = YES;
 		
-		NSLog( @"%@", error );
+			break;
+			
+		}
 		
+	}
+	
+	if ( [[dic objectForKey: @"filename"] isEqualToString: filename] == NO ) {
+		
+		dic = [[NSMutableDictionary alloc] init];
+		
+		[dic setValue: filename forKey: @"filename"];
+		
+		NSMutableData *data = [[NSMutableData alloc] init];
+		[dic setValue: data     forKey: @"data"];
+		
+		[array_Photo addObject: dic];
+		
+	}
+	
+	NSURL *url = [NSURL URLWithString: filename];
+	
+	NSURLRequest    *request    = [[NSURLRequest alloc] initWithURL: url];
+	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest: request
+																  delegate: self];
+	
+	if ( ! connection ) {
+		
+		NSLog(@"connection error.");
+
 		return;
 		
 	}
 	
-	NSDictionary *dic = [array objectAtIndex: 0];
+	[dic setValue: connection forKey: @"connection"];
+	
+}
 
-	NSString *no       = [dic objectForKey: @"no"];
-	NSString *title    = [dic objectForKey: @"title"];
-	NSString *subtitle = [dic objectForKey: @"subtitle"];
-	NSString *lat      = [dic objectForKey: @"lat"];
-	NSString *lng      = [dic objectForKey: @"lng"];
+- (void) connection: (NSURLConnection *)connection
+ didReceiveResponse: (NSURLResponse *)response
+{
 
-	self.navigationController.title = [NSString stringWithFormat: @"%@、%@", no, title];
+	if ( connection == connectionFile ) {
+		
+		receivedFile = [[NSMutableData alloc] init];
+
+	} else if ( connection == connectionData ) {
+		
+		receivedData = [[NSMutableData alloc] init];
+		
+	} else {
+		
+		NSURLConnection *connection_photo;
+		
+		for ( NSDictionary *dic in array_Photo ) {
+			
+			connection_photo = [dic objectForKey: @"connection"];
+			
+			if ( connection_photo == connection ) {
+				
+				NSMutableData *photo_data = [[NSMutableData alloc] init];
+				
+				[dic setValue: photo_data forKey: @"data"];
+
+			}
+			
+		}
+		
+	}
+	
+}
+
+- (void) connection: (NSURLConnection *)connection
+	 didReceiveData: (NSData *)data
+{
+	
+	if ( connection == connectionFile ) {
+		
+		[receivedFile appendData: data];
+		
+	} else if ( connection == connectionData ) {
+		
+		[receivedData appendData: data];
+		
+	} else {
+		
+		NSURLConnection *connection_photo;
+		
+		for ( NSDictionary *dic in array_Photo ) {
+			
+			connection_photo = [dic objectForKey: @"connection"];
+			
+			if ( connection_photo == connection ) {
+				
+				NSMutableData *photo_data = [dic objectForKey: @"data"];
+				
+				[photo_data appendData: data];
+			
+				return;
+				
+			}
+			
+		}
+		
+		NSLog( @"- (void) connection: (NSURLConnection *)connection didReceiveData: (NSData *)data Error !!" );
+		
+	}
+
+}
+
+- (void) connectionDidFinishLoading: (NSURLConnection *)connection
+{
+	
+	NSURLConnection *connection_photo;
+	NSMutableDictionary *photo_dic;
+	
+	NSString *str;
+
+	if ( connection == connectionFile ) {
+		
+		str = [[NSString alloc] initWithBytes: receivedFile.bytes
+									   length: receivedFile.length
+									 encoding: NSUTF8StringEncoding];
+
+	} else if ( connection == connectionData ) {
+		
+		str = [[NSString alloc] initWithBytes: receivedData.bytes
+									   length: receivedData.length
+									 encoding: NSUTF8StringEncoding];
+		
+	} else {
+		
+		for ( photo_dic in array_Photo ) {
+			
+			connection_photo = [photo_dic objectForKey: @"connection"];
+			
+			if ( connection_photo == connection ) {
+				
+				NSMutableData *photo_data = [photo_dic objectForKey: @"data"];
+				
+				UIImage *image = [UIImage imageWithData: photo_data];
+				
+				[photo_dic setValue: image forKey: @"photo"];
+				
+				break;
+				
+			}
+			
+		}
+		
+	}
+	
+	if ( str ) {
+		
+		str = [str stringByReplacingOccurrencesOfString: @"<!--/* Miraiserver \"NO ADD\" http://www.miraiserver.com */-->"
+											 withString: @""];
+		str = [str stringByReplacingOccurrencesOfString: @"<script type=\"text/javascript\" src=\"http://17787372.ranking.fc2.com/analyze.js\" charset=\"utf-8\"></script>"
+											 withString: @""];
+		
+		NSData *trimdata = [str dataUsingEncoding:NSUTF8StringEncoding];
+		
+		NSError *error;
+		NSArray *array = [NSJSONSerialization JSONObjectWithData: trimdata
+														 options: NSJSONReadingMutableContainers
+														   error: &error];
+		
+		if ( error ) {
+			
+			NSLog( @"%@", error );
+			
+			return;
+			
+		}
+
+		if ( connection == connectionFile ) {
+			
+			NSDictionary *dic = [array objectAtIndex: 0];
+			
+			NSString *no    = [dic objectForKey: @"id"];
+			NSString *title = [dic objectForKey: @"title"];
+			string_NoTitle  = [NSString stringWithFormat: @"%@、%@", no, title];
+			
+			string_Subtitle = [dic objectForKey: @"subtitle"];
+			
+			NSString *lat   = [dic objectForKey: @"lat"];
+			NSString *lng   = [dic objectForKey: @"lng"];
+			string_LatLng   = [NSString stringWithFormat: @"( %@, %@ )", lat, lng];
+			
+		} else if ( connection == connectionData ) {
+			
+			[array_Data removeAllObjects];
+			
+			for ( NSDictionary *dic in array ) {
+				
+				[array_Data addObject: dic];
+				
+			}
+			
+		}
+		
+	}
+	
+	
+	[self.tableView reloadData];
 	
 }
 
@@ -150,27 +334,87 @@
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+
+	return 1;
+	
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+
+	if ( [array_Data count] == 0 ) {
+		
+		return 2;
+		
+	} else {
+	
+		return 2 + 1 + [array_Photo count];
+		
+	}
+	
 }
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
-    
-    // Configure the cell...
-    
-    return cell;
+- (UITableViewCell *)tableView: (UITableView *)tableView
+		 cellForRowAtIndexPath: (NSIndexPath *)indexPath
+{
+
+	NSInteger row = indexPath.row;
+	
+	if ( row == 0 ) {
+		
+		CellViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"CellViewCell"
+															 forIndexPath: indexPath];
+		
+		cell.textLabel.text = string_Subtitle;
+
+		return cell;
+		
+	} else if ( row == 1 ) {
+		
+		CellViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"CellViewCell"
+															 forIndexPath: indexPath];
+
+		cell.textLabel.text = string_LatLng;
+
+		return cell;
+
+	} else if ( row == 2 ) {
+		
+		for ( NSDictionary *dic in array_Data ) {
+		
+			[self callPhotoData: [dic objectForKey: @"filename"]];
+			
+			TextViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"TextViewCell"
+																 forIndexPath: indexPath];
+			
+			cell.textLabel.text = [dic objectForKey: @"description"];
+			
+			return cell;
+
+		}
+		
+	} else {
+		
+		for ( NSDictionary *dic in array_Photo ) {
+			
+			PhotoViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"PhotoViewCell"
+																  forIndexPath: indexPath];
+			
+			cell.imageView_Photo.image = [dic objectForKey: @"photo"];
+			
+			cell.imageView_Photo.contentMode = UIViewContentModeScaleAspectFit;
+			
+			return cell;
+
+		}
+
+	}
+
+	return nil;
+	
 }
-*/
 
 /*
 // Override to support conditional editing of the table view.
