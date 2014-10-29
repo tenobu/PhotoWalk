@@ -215,10 +215,10 @@ didFinishPickingMediaWithInfo: (NSDictionary *)info
 		
 		if ( ok == nil ) {
 			
-			float float_lat_1 = hata.coordinate.latitude  - 0.0002;
-			float float_lat_2 = hata.coordinate.latitude  + 0.0002;
-			float float_lon_1 = hata.coordinate.longitude - 0.0002;
-			float float_lon_2 = hata.coordinate.longitude + 0.0002;
+			float float_lat_1 = hata.coordinate.latitude  - 0.0004;
+			float float_lat_2 = hata.coordinate.latitude  + 0.0004;
+			float float_lon_1 = hata.coordinate.longitude - 0.0004;
+			float float_lon_2 = hata.coordinate.longitude + 0.0004;
 			
 			if ( float_lat_1 < lat && lat < float_lat_2 &&
 				 float_lon_1 < lon && lon < float_lon_2 ) {

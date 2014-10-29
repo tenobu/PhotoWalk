@@ -139,7 +139,7 @@
 	 didReceiveData: (NSData *)data
 {
 
-	[receivedData appendData:data];
+	[receivedData appendData: data];
 
 }
 

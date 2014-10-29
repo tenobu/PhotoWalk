@@ -402,23 +402,73 @@
 		
 	} else {
 		
-		for ( NSDictionary *dic in array_Photo ) {
-			
-			PhotoViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"PhotoViewCell"
-																  forIndexPath: indexPath];
-			
-			cell.imageView_Photo.image = [dic objectForKey: @"photo"];
-			
-			cell.imageView_Photo.contentMode = UIViewContentModeScaleAspectFit;
-			
-			return cell;
-
-		}
+		NSInteger index = row - 3;
+		
+		NSDictionary *dic = [array_Photo objectAtIndex: index];
+		
+		PhotoViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"PhotoViewCell"
+															  forIndexPath: indexPath];
+		
+		cell.imageView_Photo.image = [dic objectForKey: @"photo"];
+		
+		cell.imageView_Photo.contentMode = UIViewContentModeScaleAspectFit;
+		
+		return cell;
 
 	}
 
 	return nil;
 	
+}
+
+- (CGFloat)   tableView: (UITableView *)tableView
+heightForRowAtIndexPath: (NSIndexPath *)indexPath
+{
+	
+	NSInteger row = indexPath.row;
+	
+//	UITableViewCell *cell = [self.tableView cellForRowAtIndexPath: indexPath];
+
+	if ( row < 2 ) {
+		
+		return 44;
+		
+	} else if ( row == 2 ) {
+
+		return 114;
+		
+	} else {
+
+////		PhotoViewCell *cell = (PhotoViewCell *)[tableView cellForRowAtIndexPath: indexPath];
+//
+//		CGFloat height = cell.frame.size.height;// cell.imageView_Photo.bounds.size.height + 10;
+//		
+//		return height;
+		
+//		CGRect bounds = cell.bounds;
+//		bounds.size.width = tableView.bounds.size.width;
+//		
+//		cell.bounds = bounds;
+//		
+//		[cell setNeedsLayout];
+//		[cell layoutIfNeeded];
+//		
+//		cell.pre
+//		return [cell preservesSuperviewLayoutMargins
+
+		return 300;
+		
+	}
+	
+
+}
+
+- (CGFloat)            tableView: (UITableView *)tableView
+estimatedHeightForRowAtIndexPath: (NSIndexPath *)indexPath
+{
+	
+	return UITableViewAutomaticDimension;
+
 }
 
 /*
