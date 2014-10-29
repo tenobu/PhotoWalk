@@ -161,7 +161,7 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextViewCell" textLabel="w1m-h8-LRh" rowHeight="136" style="IBUITableViewCellStyleDefault" id="FXZ-CV-QCL" customClass="TextViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TextViewCell" textLabel="w1m-h8-LRh" rowHeight="114" style="IBUITableViewCellStyleDefault" id="FXZ-CV-QCL" customClass="TextViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FXZ-CV-QCL" id="V0r-5A-Ogs">
                                     <autoresizingMask key="autoresizingMask"/>

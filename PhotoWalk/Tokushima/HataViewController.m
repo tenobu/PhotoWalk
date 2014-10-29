@@ -257,7 +257,9 @@
 				
 				[photo_dic setValue: image forKey: @"photo"];
 				
-				break;
+				[self.tableView reloadData];
+
+				return;
 				
 			}
 			
@@ -301,6 +303,7 @@
 			NSString *lng   = [dic objectForKey: @"lng"];
 			string_LatLng   = [NSString stringWithFormat: @"( %@, %@ )", lat, lng];
 			
+	
 		} else if ( connection == connectionData ) {
 			
 			[array_Data removeAllObjects];
@@ -309,14 +312,16 @@
 				
 				[array_Data addObject: dic];
 				
+				[self callPhotoData: [dic objectForKey: @"filename"]];
+			
 			}
 			
 		}
 		
+		[self.tableView reloadData];
+
 	}
 	
-	
-	[self.tableView reloadData];
 	
 }
 
@@ -384,7 +389,7 @@
 		
 		for ( NSDictionary *dic in array_Data ) {
 		
-			[self callPhotoData: [dic objectForKey: @"filename"]];
+			//[self callPhotoData: [dic objectForKey: @"filename"]];
 			
 			TextViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"TextViewCell"
 																 forIndexPath: indexPath];
