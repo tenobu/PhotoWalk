@@ -22,10 +22,12 @@
 @property NSMutableArray *array_Hata;
 @property NSMutableArray *array_HataOk;
 @property NSMutableArray *array_Photo;
-@property NSMutableArray *array_Photo_Add;
+//@property NSMutableArray *array_Photo_Add;
 @property NSMutableArray *array_GPS;
 @property NSMutableArray *array_GPSOld;
-@property NSMutableArray *array_GPSOld_Add;
+//@property NSMutableArray *array_GPSOld_Add;
+
+@property BOOL bool_GPS_Old;
 
 @end
 

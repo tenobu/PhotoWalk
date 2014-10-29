@@ -73,7 +73,10 @@
 - (void)viewWillAppear:(BOOL)animated
 {
 	
-	[self addAnnotation_Photo_Add];
+//	[self addAnnotation_Photo_Add];
+	[self addAnnotation_Photo];
+	[self addAnnotation_GPS];
+	[self addAnnotation_GPSOld];
 	
 }
 
@@ -100,6 +103,7 @@
 	
 }
 
+// 地図初期化
 - (void)initMapView
 {
 	
@@ -110,6 +114,7 @@
 	
 }
 
+// GPS初期化
 - (void)initLocationManager
 {
 	
@@ -355,6 +360,7 @@ didDeselectAnnotationView: (MKAnnotationView *)view
 	
 }
 
+// GPS関連
 - (void)     locationManager: (CLLocationManager *)manager
 didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 {
@@ -390,15 +396,19 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 		if ( _lon < 0 ) _lon *= -1;
 		
 		// 0.00007, 0.0001
-		if ( _lat > 0.0001 || _lon > 0.0001 ) {
+		if ( _lat > 0.00007 || _lon > 0.00007 ) {
 			
 			CustomAnnotation_GPS *gps = [self lastAnnotation_GPS];
 			
-			[self addAnnotation_GPSOld];
-			
-			CustomAnnotation_GPS_Old *gps_old = [self lastAnnotation_GPSOld];
-			
-			gps_old.coordinate = gps.coordinate;
+			if ( bool_GPS_Old ) {
+				
+				[self addAnnotation_GPSOld];
+				
+				CustomAnnotation_GPS_Old *gps_old = [self lastAnnotation_GPSOld];
+				
+				gps_old.coordinate = gps.coordinate;
+
+			}
 			
 			latitude  = latitude_Old  = lat;
 			longitude = longitude_Old = lon;
@@ -470,6 +480,9 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 - (void)addAnnotation_Hata
 {
 
+	[self.mapView removeAnnotations: app.array_Hata];
+	[self.mapView removeAnnotations: app.array_HataOk];
+	
 	[self.mapView addAnnotations: app.array_Hata];
 	[self.mapView addAnnotations: app.array_HataOk];
 
@@ -477,22 +490,26 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 
 - (void)addAnnotation_Photo
 {
+
+	[self.mapView removeAnnotations: app.array_Photo];
 	
 	[self.mapView addAnnotations: app.array_Photo];
 	
 }
 
-- (void)addAnnotation_Photo_Add
-{
-	
-	[self.mapView addAnnotations: app.array_Photo_Add];
-	
-	[app.array_Photo_Add removeAllObjects];
-	
-}
+//- (void)addAnnotation_Photo_Add
+//{
+//	
+//	[self.mapView addAnnotations: app.array_Photo_Add];
+//	
+//	[app.array_Photo_Add removeAllObjects];
+//	
+//}
 
 - (void)addAnnotation_GPS
 {
+	
+	[self.mapView removeAnnotations: app.array_GPS];
 	
 	CustomAnnotation_GPS *ca = [[CustomAnnotation_GPS alloc] init];
 	
@@ -533,14 +550,14 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 	
 }
 
-- (void)addAnnotation_GPSOld_Add
-{
-	
-	[self.mapView addAnnotations: app.array_GPSOld_Add];
-	
-	[app.array_Photo_Add removeAllObjects];
-	
-}
+//- (void)addAnnotation_GPSOld_Add
+//{
+//	
+//	[self.mapView addAnnotations: app.array_GPSOld_Add];
+//	
+//	[app.array_Photo_Add removeAllObjects];
+//	
+//}
 
 - (CustomAnnotation_GPS_Old *)lastAnnotation_GPSOld
 {

@@ -10,13 +10,20 @@
 
 #import <CoreLocation/CoreLocation.h>
 
-@interface CameraViewController : UIViewController < UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate >
+@interface CameraViewController : UIViewController < UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, UIActionSheetDelegate >
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @property (weak, nonatomic) IBOutlet UILabel *label_1;
 
+@property (weak, nonatomic) IBOutlet UILabel *label2;
+@property (weak, nonatomic) IBOutlet UIButton *upbtn;
+@property (weak, nonatomic) IBOutlet UIButton *tagbtn;
+
 - (IBAction)cameraButtonPressed:(id)sender;
 - (IBAction)galleryButtonPressed:(id)sender;
+
+- (IBAction)upload:(id)sender;
+- (IBAction)tagadd:(id)sender;
 
 @end

@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="0IH-BY-Ebu">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Camera-->
@@ -16,15 +17,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9qq-R3-KFT">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9qq-R3-KFT">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F86-5e-JFZ">
-                                <rect key="frame" x="16" y="85" width="568" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="05j-bf-iE6">
+                                <rect key="frame" x="55" y="494" width="30" height="30"/>
+                                <state key="normal" title="送信">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="upload:" destination="5vH-Q6-fKz" eventType="touchUpInside" id="y7g-42-oat"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ASL-1W-AXq">
                                 <rect key="frame" x="538" y="28" width="48" height="30"/>
                                 <state key="normal" title="Gallery">
@@ -34,7 +38,7 @@
                                     <action selector="galleryButtonPressed:" destination="5vH-Q6-fKz" eventType="touchUpInside" id="aSb-B1-krz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S9a-ho-NQK">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S9a-ho-NQK">
                                 <rect key="frame" x="16" y="28" width="54" height="30"/>
                                 <state key="normal" title="Camera">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -43,22 +47,77 @@
                                     <action selector="cameraButtonPressed:" destination="5vH-Q6-fKz" eventType="touchUpInside" id="lqO-zc-jaY"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z9T-Gd-WKH">
+                                <rect key="frame" x="140" y="290" width="320" height="229"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="229" id="81N-B7-9sk"/>
+                                    <constraint firstAttribute="width" constant="320" id="ppx-hu-Qaz"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ME2-Le-Kdc">
+                                <rect key="frame" x="498" y="494" width="60" height="30"/>
+                                <state key="normal" title="タグ選択">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tagadd:" destination="5vH-Q6-fKz" eventType="touchUpInside" id="XyX-UA-Sgc"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F86-5e-JFZ">
+                                <rect key="frame" x="16" y="85" width="568" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="FRy-9k-99B"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="F86-5e-JFZ" firstAttribute="leading" secondItem="S9a-ho-NQK" secondAttribute="leading" id="1h6-Lq-6sS"/>
+                            <constraint firstItem="9qq-R3-KFT" firstAttribute="leading" secondItem="beP-Fo-Fc6" secondAttribute="leading" id="3ut-5D-a9n"/>
+                            <constraint firstAttribute="trailing" secondItem="9qq-R3-KFT" secondAttribute="trailing" id="6mp-nf-dpC"/>
+                            <constraint firstItem="9qq-R3-KFT" firstAttribute="leading" secondItem="beP-Fo-Fc6" secondAttribute="leading" id="7L3-eP-NnC"/>
+                            <constraint firstItem="F86-5e-JFZ" firstAttribute="top" secondItem="beP-Fo-Fc6" secondAttribute="top" constant="85" id="94U-yL-LMd"/>
+                            <constraint firstItem="F86-5e-JFZ" firstAttribute="leading" secondItem="beP-Fo-Fc6" secondAttribute="leadingMargin" id="Ayr-zR-hcm"/>
+                            <constraint firstItem="Z9T-Gd-WKH" firstAttribute="centerX" secondItem="F86-5e-JFZ" secondAttribute="centerX" id="E7l-0s-6cH"/>
+                            <constraint firstItem="9qq-R3-KFT" firstAttribute="top" secondItem="beP-Fo-Fc6" secondAttribute="top" id="KPF-kK-LDL"/>
+                            <constraint firstItem="Z9T-Gd-WKH" firstAttribute="baseline" secondItem="05j-bf-iE6" secondAttribute="baseline" id="LQJ-Qn-dIr"/>
+                            <constraint firstAttribute="trailing" secondItem="9qq-R3-KFT" secondAttribute="trailing" id="Leh-Qb-CjT"/>
+                            <constraint firstItem="dRz-Hk-lyV" firstAttribute="top" secondItem="ME2-Le-Kdc" secondAttribute="bottom" constant="27" id="Xyg-h8-uDc"/>
+                            <constraint firstItem="dRz-Hk-lyV" firstAttribute="top" secondItem="05j-bf-iE6" secondAttribute="bottom" constant="27" id="gHk-vd-pKZ"/>
+                            <constraint firstItem="05j-bf-iE6" firstAttribute="leading" secondItem="beP-Fo-Fc6" secondAttribute="leading" constant="55" id="ggv-XQ-afa"/>
+                            <constraint firstItem="F86-5e-JFZ" firstAttribute="top" secondItem="S9a-ho-NQK" secondAttribute="bottom" constant="27" id="hdk-n4-aCQ"/>
+                            <constraint firstAttribute="trailing" secondItem="ME2-Le-Kdc" secondAttribute="trailing" constant="42" id="hqW-km-pCw"/>
                             <constraint firstAttribute="trailing" secondItem="ASL-1W-AXq" secondAttribute="trailing" constant="14" id="jaP-7U-JxD"/>
+                            <constraint firstItem="dRz-Hk-lyV" firstAttribute="top" secondItem="9qq-R3-KFT" secondAttribute="bottom" id="jgO-cp-e9p"/>
+                            <constraint firstItem="Z9T-Gd-WKH" firstAttribute="centerX" secondItem="beP-Fo-Fc6" secondAttribute="centerX" id="qTY-1d-W9b"/>
+                            <constraint firstAttribute="bottom" secondItem="9qq-R3-KFT" secondAttribute="bottom" constant="49" id="qe6-gV-WCL"/>
+                            <constraint firstItem="9qq-R3-KFT" firstAttribute="top" secondItem="beP-Fo-Fc6" secondAttribute="top" id="uh3-Df-dXg"/>
                             <constraint firstItem="ASL-1W-AXq" firstAttribute="top" secondItem="VpX-pW-QS9" secondAttribute="bottom" constant="8" id="wJy-Nc-MOu"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="jgO-cp-e9p"/>
+                            </mask>
+                        </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="Camera" image="Camera" id="LRW-oF-pMf"/>
                     <connections>
                         <outlet property="imageView" destination="9qq-R3-KFT" id="Acj-TS-h8r"/>
+                        <outlet property="label2" destination="Z9T-Gd-WKH" id="y3a-bL-yf0"/>
                         <outlet property="label_1" destination="F86-5e-JFZ" id="QAF-jS-pkZ"/>
+                        <outlet property="tagbtn" destination="ME2-Le-Kdc" id="4DY-bG-iMZ"/>
+                        <outlet property="upbtn" destination="05j-bf-iE6" id="Wd9-kd-ZUf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xat-ap-bo6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="874" y="-595"/>
+            <point key="canvasLocation" x="881" y="-595"/>
         </scene>
         <!--Tokushima-->
         <scene sceneID="DaU-pO-XPJ">

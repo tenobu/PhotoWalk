@@ -34,6 +34,9 @@
 	CLLocationDegrees   longitude, longitude_G_Old, longitude_P_Old;
 	CLLocationDirection heading;
 	
+	NSMutableArray *selecttag;
+	NSArray *tagarray;
+
 }
 
 @end
@@ -50,7 +53,14 @@
 	[self initLocationManager];
 
 	[self cameraButtonPressed: nil];
+
 	
+	self.upbtn.hidden = YES;
+	self.tagbtn.hidden = YES;
+	self.label2.hidden = YES;
+
+	tagarray = [NSArray arrayWithObjects:@"野面積み",@"算木積み",@"曲輪",@"枡形",@"刻印石",@"矢穴跡",@"埋門",@"蜂須賀卍", @"緑色片岩（青石）",@"紅簾片岩（紫雲石）",@"織豊系城郭",@"阿波の大狸",@"上田宗箇",@"舌石",@"天正期の石垣",@"転用石",@"本丸",@"鷲の門",@"潮入り庭園",@"珍景",@"ベスト",@"海蝕痕",@"貝塚",@"8620形機関車",nil];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -62,6 +72,7 @@
 
 }
 
+// GPS初期化
 - (void)initLocationManager
 {
 	
@@ -103,75 +114,7 @@
 }
 */
 
-- (IBAction)libraryButtonTouched: (id)sender
-{
-
-	if ( [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary] ) {
-		
-		UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-
-		[imagePickerController setSourceType   : UIImagePickerControllerSourceTypePhotoLibrary];
-		[imagePickerController setAllowsEditing: YES];
-		
-		imagePickerController.delegate = self;
-		
-		[self presentViewController: imagePickerController
-						   animated: YES
-						 completion: nil];
-		
-		// iPadの場合はUIPopoverControllerを使う
-//		popover = [[UIPopoverController alloc]initWithContentViewController:imagePickerController];
-//		[popover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-	} else {
-		
-		NSLog( @"photo library invalid." );
-	
-	}
-	
-}
-
-- (IBAction)cameraButtonPressed: (id)sender
-{
-	
-	UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-	
-	if ( [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera] ) {
-		
-		imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-		imagePickerController.mediaTypes = @[ (NSString *)kUTTypeImage ];
-		imagePickerController.delegate = self;
-		
-		[self presentViewController: imagePickerController
-						   animated: YES
-						 completion: NULL];
-	
-	} else {
-	
-		// camera not available, do something
-	
-	}
-
-}
-
-- (IBAction)galleryButtonPressed: (id)sender
-{
-
-	UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
-	
-	if ( [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary] ) {
-	
-		pickerController.sourceType    = UIImagePickerControllerSourceTypePhotoLibrary;
-		pickerController.allowsEditing = YES;
-		pickerController.delegate      = self;
-		
-		[self presentViewController: pickerController
-						   animated: YES
-						 completion: NULL];
-		
-	}
-	
-}
-
+// 写真関連
 - (void)imagePickerController: (UIImagePickerController *)picker
 didFinishPickingMediaWithInfo: (NSDictionary *)info
 {
@@ -200,9 +143,8 @@ didFinishPickingMediaWithInfo: (NSDictionary *)info
 					  
 					  }];
 
-	//image をデータベースに登録
 	
-	
+	app.bool_GPS_Old = YES;
 	
 	
 	CLLocationDegrees lat = latitude;
@@ -261,14 +203,21 @@ didFinishPickingMediaWithInfo: (NSDictionary *)info
 		if ( _lat > 0.0001 || _lon > 0.0001 ) {
 			
 			[self addAnnotation_Photo];
+			[self addAnnotation_GPSOld];
 			
-			latitude  = latitude_P_Old  = lat;
-			longitude = longitude_P_Old = lon;
+			latitude  = latitude_P_Old  = latitude_G_Old  = lat;
+			longitude = longitude_P_Old = longitude_G_Old = lon;
 			
 		}
 		
 	}
 	
+	selecttag = [NSMutableArray array];
+	self.tagbtn.hidden = NO;
+	self.upbtn.hidden = NO;
+	self.label2.hidden = NO;
+	self.label2.text = @"タグが選択されていません";
+
 }
 
 - (void)     locationManager: (CLLocationManager *)manager
@@ -299,32 +248,38 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 		latitude  = latitude_G_Old  = lat;
 		longitude = longitude_G_Old = lon;
 		
-		[self addAnnotation_GPS];
+		[self setAnnotation_GPS];
 		
 	} else {
-		
-		CLLocationDegrees _lat = lat - latitude_G_Old;
-		CLLocationDegrees _lon = lon - longitude_G_Old;
-		
-		if ( _lat < 0 ) _lat *= -1;
-		if ( _lon < 0 ) _lon *= -1;
-		
-		// 0.00007, 0.0001
-		if ( _lat > 0.0001 || _lon > 0.0001 ) {
+
+		if ( app.bool_GPS_Old ) {
 			
-			CustomAnnotation_GPS *gps = [self lastAnnotation_GPS];
+			CLLocationDegrees _lat = lat - latitude_G_Old;
+			CLLocationDegrees _lon = lon - longitude_G_Old;
 			
-			[self addAnnotation_GPSOld];
+			if ( _lat < 0 ) _lat *= -1;
+			if ( _lon < 0 ) _lon *= -1;
 			
-			CustomAnnotation_GPS_Old *gps_old = [self lastAnnotation_GPSOld];
-			
-			gps_old.coordinate = gps.coordinate;
-			
-			latitude  = latitude_G_Old  = lat;
-			longitude = longitude_G_Old = lon;
-			
-			gps.coordinate = CLLocationCoordinate2DMake( latitude, longitude );
-			
+			// 0.00007, 0.0001
+			if ( _lat > 0.0001 || _lon > 0.0001 ) {
+				
+				CustomAnnotation_GPS *gps = [self annotation_GPS];
+				
+				[self addAnnotation_GPSOld];
+				
+				CustomAnnotation_GPS_Old *gps_old = [self lastAnnotation_GPSOld];
+				
+				gps_old.coordinate = gps.coordinate;
+				
+				latitude  = latitude_G_Old  = lat;
+				longitude = longitude_G_Old = lon;
+				
+				gps.coordinate = CLLocationCoordinate2DMake( latitude, longitude );
+				
+				NSLog( @"GPS Old" );
+				
+			}
+
 		}
 		
 	}
@@ -357,28 +312,30 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 	ca.subtitle    = [NSString stringWithFormat: @"%f, %f", latitude, longitude];
 	ca.explanation = @"";
 	
-	[app.array_Photo_Add addObject: ca];
+//	[app.array_Photo_Add addObject: ca];
+	[app.array_Photo addObject: ca];
 	
 }
 
-- (void)addAnnotation_GPS
+- (void)setAnnotation_GPS
 {
 	
-	CustomAnnotation_GPS *ca = [[CustomAnnotation_GPS alloc] init];
+	CustomAnnotation_GPS *ca = app.array_GPS[0];
 	
 	ca.coordinate  = CLLocationCoordinate2DMake( latitude, longitude );// 34.076, 134.557 );
 	ca.title       = @"自分の現在位置";
 	ca.subtitle    = [NSString stringWithFormat: @"%f, %f", latitude, longitude];
 	ca.explanation = @"";
 	
-	[app.array_GPSOld_Add addObject: ca];
+//	[app.array_GPSOld_Add addObject: ca];
+//	[app.array_GPSOld addObject: ca];
 	
 }
 
-- (CustomAnnotation_GPS *)lastAnnotation_GPS
+- (CustomAnnotation_GPS *)annotation_GPS
 {
 	
-	return [app.array_GPS lastObject];
+	return app.array_GPS[0];
 	
 }
 
@@ -392,14 +349,33 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 	ca.subtitle    = @"opening in Dec 1958";
 	ca.explanation = @"34.074, 134.556";
 	
-	[app.array_GPSOld_Add addObject: ca];
+	CustomAnnotation_GPS_Old *cao = [app.array_GPSOld lastObject];
+	if ( cao ) {
+		
+		CLLocationCoordinate2D coordinate1, coordinate2;
+		coordinate1 = coordinate2 = cao.coordinate;
+		
+		coordinate1.latitude  -= 0.0001;
+		coordinate2.latitude  += 0.0001;
+		
+		coordinate1.longitude -= 0.0001;
+		coordinate2.longitude += 0.0001;
+		
+		if ( coordinate1.latitude  < ca.coordinate.latitude  && ca.coordinate.latitude  < coordinate2.latitude &&
+			 coordinate1.longitude < ca.coordinate.longitude && ca.coordinate.longitude < coordinate2.longitude ) return;
+		
+	}
+	
+//	[app.array_GPSOld_Add addObject: ca];
+	[app.array_GPSOld addObject: ca];
 	
 }
 
 - (CustomAnnotation_GPS_Old *)lastAnnotation_GPSOld
 {
 	
-	return [app.array_GPSOld_Add lastObject];
+//	return [app.array_GPSOld_Add lastObject];
+	return [app.array_GPSOld lastObject];
 	
 }
 
@@ -418,6 +394,217 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 	
 	return nil;
 	
+}
+
+- (IBAction)libraryButtonTouched: (id)sender
+{
+	
+	if ( [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary] ) {
+		
+		UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+		
+		[imagePickerController setSourceType   : UIImagePickerControllerSourceTypePhotoLibrary];
+		[imagePickerController setAllowsEditing: YES];
+		
+		imagePickerController.delegate = self;
+		
+		[self presentViewController: imagePickerController
+						   animated: YES
+						 completion: nil];
+		
+		// iPadの場合はUIPopoverControllerを使う
+		//		popover = [[UIPopoverController alloc]initWithContentViewController:imagePickerController];
+		//		[popover presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+	} else {
+		
+		NSLog( @"photo library invalid." );
+		
+	}
+	
+}
+
+- (IBAction)cameraButtonPressed: (id)sender
+{
+	
+	UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+	
+	if ( [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera] ) {
+		
+		imagePickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+		imagePickerController.mediaTypes = @[ (NSString *)kUTTypeImage ];
+		imagePickerController.delegate = self;
+		
+		[self presentViewController: imagePickerController
+						   animated: YES
+						 completion: NULL];
+		
+	} else {
+		
+		// camera not available, do something
+		
+	}
+	
+}
+
+- (IBAction)galleryButtonPressed: (id)sender
+{
+	
+	UIImagePickerController *pickerController = [[UIImagePickerController alloc] init];
+	
+	if ( [UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary] ) {
+		
+		pickerController.sourceType    = UIImagePickerControllerSourceTypePhotoLibrary;
+		pickerController.allowsEditing = YES;
+		pickerController.delegate      = self;
+		
+		[self presentViewController: pickerController
+						   animated: YES
+						 completion: NULL];
+		
+	}
+	
+}
+
+- (IBAction)tagadd:(id)sender {
+	//アクションシートの変数を生成
+	UIActionSheet *as = [[UIActionSheet alloc]init];
+	//アクションシートのタイトルを設定
+	as.title = @"タグを選んでください";
+	//アクションシートのデリゲートを自分自身に設定
+	as.delegate = self;
+	//tagarrayの要素数の繰り返し処理実行
+	for (int i = 0; i < [tagarray count]; i++) {
+		//追加するボタンのタイトルをtagarrayのi番目の要素に設定
+		[as addButtonWithTitle:[tagarray objectAtIndex:i]];
+	}
+	//アクションシートを表示
+	[as showInView:self.view];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+	//選択したタグの名前を格納する変数
+	NSString *tag = [tagarray objectAtIndex:buttonIndex];
+	//もうすでに選択されているか
+	if ([selecttag containsObject:tag]) {
+		UIAlertView *alert = [[UIAlertView alloc]
+							  initWithTitle:@"警告"
+							  message:@"このタグはもう選択されています"
+							  delegate:self
+							  cancelButtonTitle:nil
+							  otherButtonTitles:@"OK", nil];
+		[alert show];
+	}
+	//選択したタグが5個以下か
+	else if ([selecttag count]<5) {
+		//タグを追加
+		[selecttag addObject:tag];
+		self.label2.text = @"選択したタグ\n";
+		for (int i = 0; i<[selecttag count]; i++) {
+			self.label2.text = [self.label2.text stringByAppendingString:[selecttag objectAtIndex:i]];
+			if (i < [selecttag count] - 1) {
+				self.label2.text = [self.label2.text stringByAppendingString:@"\n"];
+			}
+		}
+	}else{
+		UIAlertView *alert = [[UIAlertView alloc]
+							  initWithTitle:@"警告"
+							  message:@"タグは5つまでしか選択されません"
+							  delegate:self
+							  cancelButtonTitle:nil
+							  otherButtonTitles:@"OK", nil];
+		[alert show];
+	}
+	
+}
+
+- (IBAction)upload:(id)sender {
+	
+	//    longitude
+	NSString *tagstr = self.label2.text;
+	self.tagbtn.hidden = YES;
+	self.upbtn.hidden = YES;
+	UIImage *img = self.imageView.image;
+	NSData *imgdata =
+	UIImageJPEGRepresentation(img, 1.0f);
+	NSString *dvid = [UIDevice currentDevice].identifierForVendor.UUIDString;
+	NSString *urlstr = @"http://smartshinobu.miraiserver.com/tokushima/idadd.php?iphoneid=";
+	NSLog(@"%@",dvid);
+	urlstr = [urlstr stringByAppendingString:dvid];
+	NSURL *url = [NSURL URLWithString:urlstr];
+	//リクエスト生成
+	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+	//レスポンスを生成
+	NSHTTPURLResponse *response;
+	//NSErrorの初期化
+	NSError *err = nil;
+	//requestによって返ってきたデータを生成
+	NSData *data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&err];
+	NSString *datastr = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+	NSLog(@"%@",datastr);
+	//写真のデータ50000バイトより小さくするようにする
+	while (imgdata.length > 50000) {
+		//圧縮率0.7で圧縮
+		imgdata = UIImageJPEGRepresentation(img, 0.7f);
+		
+		img = [[UIImage alloc]initWithData:imgdata];
+		if (imgdata.length <= 50000) {
+			break;
+		}
+		//サイズ7割にする
+		CGSize cs = CGSizeMake(img.size.width*0.7, img.size.height*0.7);
+		UIGraphicsBeginImageContext(cs);
+		[img drawInRect:CGRectMake(0, 0, cs.width, cs.height)];
+		img = UIGraphicsGetImageFromCurrentImageContext();
+		UIGraphicsEndImageContext();
+	}
+	self.label2.text = @"写真を送信中";
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+		NSURL *url = [NSURL URLWithString:@"http://smartshinobu.miraiserver.com/tokushima/file.php"];
+		NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
+		NSMutableData *body = [NSMutableData data];
+		NSString *boundary = @"--1680ert52491z";
+		NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+		[request setHTTPMethod:@"POST"];
+		//iphoneidのパラメータの設定
+		[body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:[@"Content-Disposition: form-data; name=\"iphoneid\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:[[NSString stringWithFormat:@"%@\r\n", dvid] dataUsingEncoding:NSUTF8StringEncoding]];
+		//latのパラメータの設定
+		[body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:[@"Content-Disposition: form-data; name=\"lat\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+		NSString *lat = [NSString stringWithFormat:@"%f",latitude];
+		[body appendData:[[NSString stringWithFormat:@"%@\r\n", lat] dataUsingEncoding:NSUTF8StringEncoding]];
+		//lngのパラメータの設定
+		[body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:[@"Content-Disposition: form-data; name=\"lng\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+		NSString *lng = [NSString stringWithFormat:@"%f",longitude];
+		[body appendData:[[NSString stringWithFormat:@"%@\r\n", lng] dataUsingEncoding:NSUTF8StringEncoding]];
+		//タグを選択したかどうか
+		if ([selecttag count] > 0) {
+			//tagのパラメータの設定
+			[body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+			[body appendData:[@"Content-Disposition: form-data; name=\"tag\"\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+			NSString *tagstr2 = [tagstr stringByReplacingOccurrencesOfString:@"選択したタグ\n" withString:@""];
+			NSLog(@"%@",tagstr2);
+			[body appendData:[[NSString stringWithFormat:@"%@\r\n", tagstr2] dataUsingEncoding:NSUTF8StringEncoding]];
+		}
+		//imageのパラメータの設定
+		[body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:[@"Content-Disposition: form-data; name=\"image\"; filename=\"2.jpg\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+		[body appendData:imgdata];
+		[body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+		[request addValue:contentType forHTTPHeaderField:@"Content-Type"];
+		[request setHTTPBody:body];
+		NSURLResponse *response;
+		NSError *err = nil;
+		NSData *data2 = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&err];
+		NSString *datastr2 = [[NSString alloc]initWithData:data2 encoding:NSUTF8StringEncoding];
+		NSLog(@"%@",datastr2);
+		dispatch_async(dispatch_get_main_queue(), ^{
+			self.label2.text = @"アップロード完了";
+		});
+	});
 }
 
 @end

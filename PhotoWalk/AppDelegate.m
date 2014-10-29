@@ -38,6 +38,8 @@
 	[self initAnnotation_GPS];
 	[self initAnnotation_GPSOld];
 	
+	self.bool_GPS_Old = NO;
+	
 	return YES;
 
 }
@@ -103,7 +105,7 @@
 {
 	
 	self.array_Photo     = [[NSMutableArray alloc] init];
-	self.array_Photo_Add = [[NSMutableArray alloc] init];
+//	self.array_Photo_Add = [[NSMutableArray alloc] init];
 	
 }
 
@@ -118,7 +120,7 @@
 {
 	
 	self.array_GPSOld     = [[NSMutableArray alloc] init];
-	self.array_GPSOld_Add = [[NSMutableArray alloc] init];
+//	self.array_GPSOld_Add = [[NSMutableArray alloc] init];
 	
 }
 

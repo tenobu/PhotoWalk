@@ -54,13 +54,20 @@
     NSString *dvid = (NSString*)[UIDevice currentDevice].identifierForVendor;
     NSLog(@"%@",dvid);
     //今日取った写真の名前の配列を取得するためのURLを表す文字列を格納
-    NSString *urlstr = @"http://smartshinobu.miraiserver.com/tokushima/historyphoto.php?iphoneid=";
+//	NSString *urlstr = @"http://smartshinobu.miraiserver.com/tokushima/historyphoto.php?iphoneid=";
+	NSString *urlstr = @"http://smartshinobu.miraiserver.com/tokushima/today.php?iphoneid=";
     //urlstrの末尾に変数dvidを追加
 	urlstr = [urlstr stringByAppendingString:dvid];
 	//ここ
 	//Mac book Pro のシュミレーターだとエラーが起きるので確認して下さい。
-	
-	
+	//iPhone でもエラーがでている。
+
+//	2014-10-29 23:25:00.521 PhotoWalk[303:38623] <__NSConcreteUUID 0x17403b000> 9557A3BB-02F7-4FC5-8B38-9DFD0683DDD2
+//	2014-10-29 23:25:14.601 PhotoWalk[303:38623] -[__NSConcreteUUID length]: unrecognized selector sent to instance 0x17403b000
+//	2014-10-29 23:25:14.604 PhotoWalk[303:38623] *** Terminating app due to uncaught exception 'NSInvalidArgumentException', reason: '-[__NSConcreteUUID length]: unrecognized selector sent to instance 0x17403b000'
+//	*** First throw call stack:
+//	(0x188599e48 0x198c8c0e4 0x1885a0f14 0x18859dcc4 0x1884a2c1c 0x1893818ac 0x100073a60 0x18cd7d0f8 0x18cd6622c 0x18cd7ca94 0x18cd7c720 0x18cd75c74 0x18cd4938c 0x18cfe81b4 0x18cd478f4 0x1885520e8 0x18855138c 0x18854f43c 0x18847d1f4 0x1916135a4 0x18cdae784 0x10007c1d0 0x1992faa08)
+//	libc++abi.dylib: terminating with uncaught exception of type NSException
 	
 	
 	
