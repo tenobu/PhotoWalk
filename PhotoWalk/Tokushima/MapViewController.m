@@ -86,7 +86,7 @@
 //	[self addAnnotation_Photo_Add];
 	[self addAnnotation_Photo];
 	[self setAnnotation_GPS];
-	[self addAnnotation_GPSOld];
+	[self setAnnotation_GPSOld];
 	
 }
 
@@ -407,7 +407,7 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 		if ( _lon < 0 ) _lon *= -1;
 		
 		// 0.00007, 0.0001
-		if ( _lat > 0.00007 || _lon > 0.00007 ) {
+		if ( _lat > 0.0001 || _lon > 0.0001 ) {
 			
 			CustomAnnotation_GPS *gps = [self annotation_GPS];
 			
@@ -545,8 +545,21 @@ didChangeAuthorizationStatus: (CLAuthorizationStatus)status
 	
 }
 
+- (void)setAnnotation_GPSOld
+{
+	
+	if ( app.bool_GPS_Old == NO ) return;
+	
+	[self.mapView removeAnnotations: app.array_GPSOld];
+	
+	[self.mapView addAnnotations: app.array_GPSOld];
+	
+}
+
 - (void)addAnnotation_GPSOld
 {
+	
+	if ( app.bool_GPS_Old == NO ) return;
 	
 	[self.mapView removeAnnotations: app.array_GPSOld];
 	
