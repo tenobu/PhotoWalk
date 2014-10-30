@@ -51,11 +51,12 @@
 //今日というボタンを押されたときに呼ばれるメソッド
 - (IBAction)today:(id)sender {
     //端末のIDを表す文字列を格納
-    NSString *dvid = (NSString*)[UIDevice currentDevice].identifierForVendor;
-    NSLog(@"%@",dvid);
+//    NSString *dvid = (NSString*)[UIDevice currentDevice].identifierForVendor;
+	NSString *dvid = [UIDevice currentDevice].identifierForVendor.UUIDString;
+	NSLog(@"%@",dvid);
     //今日取った写真の名前の配列を取得するためのURLを表す文字列を格納
 //	NSString *urlstr = @"http://smartshinobu.miraiserver.com/tokushima/historyphoto.php?iphoneid=";
-	NSString *urlstr = @"http://smartshinobu.miraiserver.com/tokushima/today.php?iphoneid=";
+	NSString *urlstr = @"http://smartshinobu.miraiserver.com/tokushima/todayphoto.php?iphoneid=";
     //urlstrの末尾に変数dvidを追加
 	urlstr = [urlstr stringByAppendingString:dvid];
 	//ここ
